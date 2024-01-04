@@ -15,7 +15,7 @@ class Request {
 
             ipIn = generateRandomIP(engine);
             ipOut = generateRandomIP(engine);
-            std::uniform_int_distribution<int> dist(0, 100);
+            std::uniform_int_distribution<int> dist(1, 100);
             time = dist(engine);
             taskDuration = time;
         }
