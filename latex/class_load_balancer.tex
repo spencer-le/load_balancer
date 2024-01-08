@@ -1,0 +1,150 @@
+\doxysection{Load\+Balancer Class Reference}
+\hypertarget{class_load_balancer}{}\label{class_load_balancer}\index{LoadBalancer@{LoadBalancer}}
+
+
+Class representing a load balancer.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_load_balancer_a9f837971f41bbdd69c59adf6b59d7a2e}{Load\+Balancer}} (int \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{server\+Count}})
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{class_load_balancer}{Load\+Balancer}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_load_balancer_a69951a7bb77be7fafd4d5ad6919abd80}{\texorpdfstring{$\sim$}{\string~}\+Load\+Balancer}} ()
+\begin{DoxyCompactList}\small\item\em Destructor for \doxylink{class_load_balancer}{Load\+Balancer}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_load_balancer_abe7695531312246b90920a463afc95d8}{run}} (int time\+\_\+count)
+\begin{DoxyCompactList}\small\item\em Runs the load balancing process for a specified duration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::queue$<$ \mbox{\hyperlink{class_request}{Request}} $>$ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\+\_\+queue}}
+\begin{DoxyCompactList}\small\item\em Queue of incoming requests. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_web_server}{Web\+Server}} $>$ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}
+\begin{DoxyCompactList}\small\item\em Vector of \doxylink{class_web_server}{Web\+Server} objects. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{server\+Count}}
+\begin{DoxyCompactList}\small\item\em The initial number of servers. \end{DoxyCompactList}\item 
+std\+::ofstream \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{log\+File}}
+\begin{DoxyCompactList}\small\item\em File stream for logging activities. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}{total\+Requests\+Completed}}
+\begin{DoxyCompactList}\small\item\em Total number of requests completed. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}{request\+Added}}
+\begin{DoxyCompactList}\small\item\em Total number of requests added. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing a load balancer. 
+
+This class manages a set of web servers and distributes incoming requests among them. It handles request addition, processing, and logging. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_load_balancer_a9f837971f41bbdd69c59adf6b59d7a2e}\label{class_load_balancer_a9f837971f41bbdd69c59adf6b59d7a2e} 
+\index{LoadBalancer@{LoadBalancer}!LoadBalancer@{LoadBalancer}}
+\index{LoadBalancer@{LoadBalancer}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{LoadBalancer()}{LoadBalancer()}}
+{\footnotesize\ttfamily Load\+Balancer\+::\+Load\+Balancer (\begin{DoxyParamCaption}\item[{int}]{server\+Count }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor for \doxylink{class_load_balancer}{Load\+Balancer}. 
+
+Initializes a \doxylink{class_load_balancer}{Load\+Balancer} with a specified number of web servers. 
+\begin{DoxyParams}{Parameters}
+{\em server\+Count} & The number of web servers to initialize. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_load_balancer_a69951a7bb77be7fafd4d5ad6919abd80}\label{class_load_balancer_a69951a7bb77be7fafd4d5ad6919abd80} 
+\index{LoadBalancer@{LoadBalancer}!````~LoadBalancer@{\texorpdfstring{$\sim$}{\string~}LoadBalancer}}
+\index{````~LoadBalancer@{\texorpdfstring{$\sim$}{\string~}LoadBalancer}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}LoadBalancer()}{\string~LoadBalancer()}}
+{\footnotesize\ttfamily Load\+Balancer\+::\texorpdfstring{$\sim$}{\string~}\+Load\+Balancer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destructor for \doxylink{class_load_balancer}{Load\+Balancer}. 
+
+Closes the log file if it is open. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_load_balancer_abe7695531312246b90920a463afc95d8}\label{class_load_balancer_abe7695531312246b90920a463afc95d8} 
+\index{LoadBalancer@{LoadBalancer}!run@{run}}
+\index{run@{run}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void Load\+Balancer\+::run (\begin{DoxyParamCaption}\item[{int}]{time\+\_\+count }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Runs the load balancing process for a specified duration. 
+
+Handles the addition of new requests, distribution of requests to servers, and the logging of various events. 
+\begin{DoxyParams}{Parameters}
+{\em time\+\_\+count} & The duration to run the load balancing process. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}\label{class_load_balancer_a378ff5516d45a32d42e92678ade2b668} 
+\index{LoadBalancer@{LoadBalancer}!logFile@{logFile}}
+\index{logFile@{logFile}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{logFile}{logFile}}
+{\footnotesize\ttfamily std\+::ofstream Load\+Balancer\+::log\+File\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+File stream for logging activities. 
+
+\Hypertarget{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}\label{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb} 
+\index{LoadBalancer@{LoadBalancer}!request\_queue@{request\_queue}}
+\index{request\_queue@{request\_queue}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{request\_queue}{request\_queue}}
+{\footnotesize\ttfamily std\+::queue$<$\mbox{\hyperlink{class_request}{Request}}$>$ Load\+Balancer\+::request\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Queue of incoming requests. 
+
+\Hypertarget{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}\label{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c} 
+\index{LoadBalancer@{LoadBalancer}!requestAdded@{requestAdded}}
+\index{requestAdded@{requestAdded}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{requestAdded}{requestAdded}}
+{\footnotesize\ttfamily int Load\+Balancer\+::request\+Added\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Total number of requests added. 
+
+\Hypertarget{class_load_balancer_a3c644156446f9139505c3672decab277}\label{class_load_balancer_a3c644156446f9139505c3672decab277} 
+\index{LoadBalancer@{LoadBalancer}!serverCount@{serverCount}}
+\index{serverCount@{serverCount}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{serverCount}{serverCount}}
+{\footnotesize\ttfamily int Load\+Balancer\+::server\+Count\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The initial number of servers. 
+
+\Hypertarget{class_load_balancer_a1d9611c8c16035069765ab6e08425111}\label{class_load_balancer_a1d9611c8c16035069765ab6e08425111} 
+\index{LoadBalancer@{LoadBalancer}!servers@{servers}}
+\index{servers@{servers}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{servers}{servers}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_web_server}{Web\+Server}}$>$ Load\+Balancer\+::servers\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Vector of \doxylink{class_web_server}{Web\+Server} objects. 
+
+\Hypertarget{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}\label{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff} 
+\index{LoadBalancer@{LoadBalancer}!totalRequestsCompleted@{totalRequestsCompleted}}
+\index{totalRequestsCompleted@{totalRequestsCompleted}!LoadBalancer@{LoadBalancer}}
+\doxysubsubsection{\texorpdfstring{totalRequestsCompleted}{totalRequestsCompleted}}
+{\footnotesize\ttfamily int Load\+Balancer\+::total\+Requests\+Completed\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Total number of requests completed. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{load__balancer_8cpp}{load\+\_\+balancer.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,152 @@
+\doxysection{load\+\_\+balancer.\+cpp}
+\hypertarget{load__balancer_8cpp_source}{}\label{load__balancer_8cpp_source}\mbox{\hyperlink{load__balancer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{web__server_8cpp}{web\_server.cpp}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_load_balancer}{LoadBalancer}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ std::queue<Request>\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}};\ }
+\DoxyCodeLine{00014\ \ \ \ \ std::vector<WebServer>\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}};\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}};\ }
+\DoxyCodeLine{00016\ \ \ \ \ std::ofstream\ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}};\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}{totalRequestsCompleted}};\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}{requestAdded}};\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a9f837971f41bbdd69c59adf6b59d7a2e}{LoadBalancer}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}})\ :\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}}(\mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}})\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}.open(\textcolor{stringliteral}{"{}log.txt"{}});\ \textcolor{comment}{//\ Open\ the\ log\ file}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}{totalRequestsCompleted}}\ =\ 0;\ \textcolor{comment}{//\ Total\ requests\ completed}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}{requestAdded}}\ =\ 0;\ \textcolor{comment}{//\ Total\ requests\ added}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a69951a7bb77be7fafd4d5ad6919abd80}{\string~LoadBalancer}}()\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}.is\_open())\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}.close();\ \textcolor{comment}{//\ Close\ the\ log\ file\ in\ the\ destructor}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_load_balancer_abe7695531312246b90920a463afc95d8}{run}}(\textcolor{keywordtype}{int}\ time\_count)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ threshold,\ durationStart,\ durationEnd,\ randomRequestProbability,\ maxNewReq;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ the\ request\ queue\ threshold\ for\ the\ load\ balancer\ (check\ if\ there\ are\ more\ requests\ in\ queue\ than\ threshold):\ "{}};}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ threshold;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ the\ minimum\ starting\ duration\ for\ the\ requests:\ "{}};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ durationStart;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ the\ maximum\ ending\ duration\ for\ the\ requests:\ "{}};}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ durationEnd;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ the\ maximum\ number\ of\ new\ requests\ that\ can\ be\ added\ in\ one\ cycle:\ "{}};}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ maxNewReq;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ the\ probability\ of\ a\ new\ request\ being\ added\ (x/100):\ "{}};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ randomRequestProbability;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Starting\ Total\ Requests\ in\ Queue:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}}\ *\ 20\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}The\ Range\ of\ Duration\ Times\ is\ Between\ "{}}\ <<\ durationStart\ <<\ \textcolor{stringliteral}{"{}\ and\ "{}}\ <<\ durationEnd\ <<\ \textcolor{stringliteral}{"{}\ Cycles"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Queue\ Threshold:\ "{}}\ <<\ threshold\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Probability\ of\ a\ New\ Request\ Being\ Added:\ "{}}\ <<\ randomRequestProbability\ <<\ \textcolor{stringliteral}{"{}\%"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Maximum\ Number\ of\ New\ Requests\ That\ Can\ Be\ Added\ in\ One\ Cycle:\ "{}}\ <<\ maxNewReq\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ create\ request\_queue}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Requests\ in\ Starting\ Queue"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}}\ *\ 20;\ ++i)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_request}{Request}}\ request\ =\ \mbox{\hyperlink{class_request}{Request}}(durationStart,\ durationEnd);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.push(request);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}IP\ in:\ "{}}\ <<\ request.\mbox{\hyperlink{class_request_aa83b5e8331e7f13fb5742984f955d0c1}{ipIn}}\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ request.\mbox{\hyperlink{class_request_af585c7ba4ed14c760cf8d72b232091b4}{ipOut}}\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ request.\mbox{\hyperlink{class_request_a79f5806bb0e9c87a8259f1aff9a07b78}{taskDuration}}\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fill\ servers\ with\ WebServers}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}};\ ++i)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server}{WebServer}}\ webServer;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.push\_back(webServer);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ std::default\_random\_engine\ engine(rd());}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ std::uniform\_int\_distribution<int>\ dist(1,\ 100);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ std::uniform\_int\_distribution<int>\ newReqDist(1,\ maxNewReq);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ carry\ out\ load\ balancing\ program}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ time\_count;\ ++i)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Cycle:\ "{}}\ <<\ i\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Cycle:\ "{}}\ <<\ i\ <<\ std::endl;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ newReqDist(engine);\ ++j)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dist(engine)\ <=\ randomRequestProbability)\ \{\ \textcolor{comment}{//\ Adjust\ the\ condition\ based\ on\ your\ desired\ frequency\ of\ adding\ requests}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_request}{Request}}\ newRequest\ =\ \mbox{\hyperlink{class_request}{Request}}(durationStart,\ durationEnd);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.push(newRequest);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}New\ Request\ Added\ |\ IP\ in:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_aa83b5e8331e7f13fb5742984f955d0c1}{ipIn}}\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_af585c7ba4ed14c760cf8d72b232091b4}{ipOut}}\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_a79f5806bb0e9c87a8259f1aff9a07b78}{taskDuration}}\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}New\ Request\ Added\ |\ IP\ in:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_aa83b5e8331e7f13fb5742984f955d0c1}{ipIn}}\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_af585c7ba4ed14c760cf8d72b232091b4}{ipOut}}\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ newRequest.\mbox{\hyperlink{class_request_a79f5806bb0e9c87a8259f1aff9a07b78}{taskDuration}}\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}{requestAdded}}++;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentFullServers\ =\ 0;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size();\ ++j)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].isEmpty())\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrement\ the\ time\ of\ the\ current\ request}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_request}{Request}}\&\ currentRequest\ =\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].getRequest();}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentRequest.\mbox{\hyperlink{class_request_a3cfb576ed0b5e08612f3de8bc7cd72e2}{time}}\ >\ 0)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentRequest.\mbox{\hyperlink{class_request_a3cfb576ed0b5e08612f3de8bc7cd72e2}{time}}\ -\/=\ 1;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ the\ request\ is\ completed}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentRequest.\mbox{\hyperlink{class_request_a3cfb576ed0b5e08612f3de8bc7cd72e2}{time}}\ <=\ 0)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Completed\ |\ IP\ in:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_aa83b5e8331e7f13fb5742984f955d0c1}{ipIn}}\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_af585c7ba4ed14c760cf8d72b232091b4}{ipOut}}\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_a79f5806bb0e9c87a8259f1aff9a07b78}{taskDuration}}\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Request\ Completed\ |\ IP\ in:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_aa83b5e8331e7f13fb5742984f955d0c1}{ipIn}}\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_af585c7ba4ed14c760cf8d72b232091b4}{ipOut}}\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ currentRequest.\mbox{\hyperlink{class_request_a79f5806bb0e9c87a8259f1aff9a07b78}{taskDuration}}\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}<<\ std::endl;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].removeRequest();}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}{totalRequestsCompleted}}++;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Load\ next\ request\ if\ available}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.empty())\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Loaded\ |\ IP\ in:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipIn\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipOut\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().taskDuration\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Request\ Loaded\ |\ IP\ in:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipIn\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipOut\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().taskDuration\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}<<\ std::endl;}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].addRequest(\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front());}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.pop();}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.empty())\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Load\ request\ into\ empty\ server}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Loaded\ |\ IP\ in:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipIn\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipOut\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().taskDuration\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Request\ Loaded\ |\ IP\ in:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipIn\ <<\ \textcolor{stringliteral}{"{}\ |\ IP\ out:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().ipOut\ <<\ \textcolor{stringliteral}{"{}\ |\ Duration:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front().taskDuration\ <<\ \textcolor{stringliteral}{"{}\ cycles"{}}<<\ std::endl;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].addRequest(\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.front());}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.pop();}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].isEmpty())\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentFullServers++;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.size()\ >\ threshold)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Queue\ Over\ Threshold.\ Doubling\ Amount\ of\ Web\ Servers"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentServerCount\ =\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ currentServerCount;\ ++j)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server}{WebServer}}\ webServer;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.push\_back(webServer);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.size()\ <=\ 0\ \&\&\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size()\ /\ 2\ >\ currentFullServers\ \&\&\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size()\ /\ 2\ >\ \mbox{\hyperlink{class_load_balancer_a3c644156446f9139505c3672decab277}{serverCount}})\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Request\ Queue\ Under\ Threshold.\ Halving\ Amount\ of\ Web\ Servers"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size();\ ++j)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[j].isEmpty())\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.erase(\mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.begin()\ +\ j);}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j-\/-\/;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ uncompletedRequests\ =\ 0;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size();\ ++i)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}[i].isEmpty())\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uncompletedRequests++;}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nTotal\ Requests\ Completed:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a565eb9e54eacc3dc6c6a6083ee2445ff}{totalRequestsCompleted}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Total\ New\ Requests\ Added\ Over\ Input\ Time:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_aacc2cd43a5479bc88bb140a7aca9036c}{requestAdded}}\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Total\ Number\ of\ Web\ Servers\ Left:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a1d9611c8c16035069765ab6e08425111}{servers}}.size()\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Total\ Requests\ Remaining\ in\ Queue:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.size()\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_load_balancer_a378ff5516d45a32d42e92678ade2b668}{logFile}}\ <<\ \textcolor{stringliteral}{"{}Total\ Uncompleted\ Requests:\ "{}}\ <<\ \mbox{\hyperlink{class_load_balancer_a5ee2fe843f9022ae19a432c17d2e63cb}{request\_queue}}.size()\ +\ uncompletedRequests\ <<\ std::endl;\ \textcolor{comment}{//\ Write\ to\ log\ file}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00171\ \};}
+
+\end{DoxyCode}

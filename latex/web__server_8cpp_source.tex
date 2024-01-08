@@ -1,0 +1,62 @@
+\doxysection{web\+\_\+server.\+cpp}
+\hypertarget{web__server_8cpp_source}{}\label{web__server_8cpp_source}\mbox{\hyperlink{web__server_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{request_8cpp}{request.cpp}}"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_web_server}{WebServer}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}};\ }
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{class_request}{Request}}*\ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}};\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_ad053f4e1808a3c10c7522d0dbbbc031a}{WebServer}}()\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a1a0a29895986ab3558a638bc75f41259}{\string~WebServer}}()\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a152548296e8b262b7b0184768aa2b9fe}{WebServer}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_web_server}{WebServer}}\&\ other)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}\ =\ other.\mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}};}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (other.\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}})\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_request}{Request}}(*other.\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}});}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server}{WebServer}}\&\ \mbox{\hyperlink{class_web_server_ad746dd46e47c53b96b0f85351a2f87c8}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_web_server}{WebServer}}\&\ other)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ !=\ \&other)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}\ =\ other.\mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}};}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (other.\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}})\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_request}{Request}}(*other.\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_web_server_a0613f01a41149cc3f92bc122790a9dbb}{addRequest}}(\mbox{\hyperlink{class_request}{Request}}\ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}})\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ this-\/>\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}};}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>request\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_request}{Request}}(\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_web_server_a12be82559faaab191a09fb5beda2a1f1}{removeRequest}}()\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}};}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_request}{Request}}\&\ \mbox{\hyperlink{class_web_server_a511535b609ec15ad4ba84486b78dd043}{getRequest}}()\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}};}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_web_server_a3c377518f6ab6b1075874a8e980c400f}{isEmpty}}()\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \};}
+
+\end{DoxyCode}

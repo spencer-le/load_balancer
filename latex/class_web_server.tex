@@ -1,0 +1,176 @@
+\doxysection{Web\+Server Class Reference}
+\hypertarget{class_web_server}{}\label{class_web_server}\index{WebServer@{WebServer}}
+
+
+Class representing a web server.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_web_server_ad053f4e1808a3c10c7522d0dbbbc031a}{Web\+Server}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_web_server_a1a0a29895986ab3558a638bc75f41259}{\texorpdfstring{$\sim$}{\string~}\+Web\+Server}} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_web_server_a152548296e8b262b7b0184768aa2b9fe}{Web\+Server}} (const \mbox{\hyperlink{class_web_server}{Web\+Server}} \&other)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_web_server}{Web\+Server}} \& \mbox{\hyperlink{class_web_server_ad746dd46e47c53b96b0f85351a2f87c8}{operator=}} (const \mbox{\hyperlink{class_web_server}{Web\+Server}} \&other)
+\begin{DoxyCompactList}\small\item\em Copy assignment operator. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_web_server_a0613f01a41149cc3f92bc122790a9dbb}{add\+Request}} (\mbox{\hyperlink{class_request}{Request}} \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}})
+\begin{DoxyCompactList}\small\item\em Adds a request to the web server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_web_server_a12be82559faaab191a09fb5beda2a1f1}{remove\+Request}} ()
+\begin{DoxyCompactList}\small\item\em Removes the current request from the web server. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_request}{Request}} \& \mbox{\hyperlink{class_web_server_a511535b609ec15ad4ba84486b78dd043}{get\+Request}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the current request. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_web_server_a3c377518f6ab6b1075874a8e980c400f}{is\+Empty}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the web server is empty. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}{empty}}
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the server is handling a request. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_request}{Request}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_web_server_a076fd03d00964d108f20b061576ea30d}{request}}
+\begin{DoxyCompactList}\small\item\em Pointer to the current request being handled. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing a web server. 
+
+This class models a web server that can handle a single request at a time. It provides methods to add, remove, and retrieve the current request. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_web_server_ad053f4e1808a3c10c7522d0dbbbc031a}\label{class_web_server_ad053f4e1808a3c10c7522d0dbbbc031a} 
+\index{WebServer@{WebServer}!WebServer@{WebServer}}
+\index{WebServer@{WebServer}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{WebServer()}{WebServer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Web\+Server\+::\+Web\+Server (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Default constructor. 
+
+Initializes a new \doxylink{class_web_server}{Web\+Server} instance as empty and without any request. \Hypertarget{class_web_server_a1a0a29895986ab3558a638bc75f41259}\label{class_web_server_a1a0a29895986ab3558a638bc75f41259} 
+\index{WebServer@{WebServer}!````~WebServer@{\texorpdfstring{$\sim$}{\string~}WebServer}}
+\index{````~WebServer@{\texorpdfstring{$\sim$}{\string~}WebServer}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}WebServer()}{\string~WebServer()}}
+{\footnotesize\ttfamily Web\+Server\+::\texorpdfstring{$\sim$}{\string~}\+Web\+Server (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destructor. 
+
+Cleans up any allocated resources. \Hypertarget{class_web_server_a152548296e8b262b7b0184768aa2b9fe}\label{class_web_server_a152548296e8b262b7b0184768aa2b9fe} 
+\index{WebServer@{WebServer}!WebServer@{WebServer}}
+\index{WebServer@{WebServer}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{WebServer()}{WebServer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Web\+Server\+::\+Web\+Server (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_web_server}{Web\+Server}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Copy constructor. 
+
+Creates a new \doxylink{class_web_server}{Web\+Server} instance as a copy of another instance. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The \doxylink{class_web_server}{Web\+Server} instance to copy from. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_web_server_a0613f01a41149cc3f92bc122790a9dbb}\label{class_web_server_a0613f01a41149cc3f92bc122790a9dbb} 
+\index{WebServer@{WebServer}!addRequest@{addRequest}}
+\index{addRequest@{addRequest}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{addRequest()}{addRequest()}}
+{\footnotesize\ttfamily void Web\+Server\+::add\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_request}{Request}}}]{request }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Adds a request to the web server. 
+
+Deletes any existing request and replaces it with the new one. 
+\begin{DoxyParams}{Parameters}
+{\em request} & The request to add. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_web_server_a511535b609ec15ad4ba84486b78dd043}\label{class_web_server_a511535b609ec15ad4ba84486b78dd043} 
+\index{WebServer@{WebServer}!getRequest@{getRequest}}
+\index{getRequest@{getRequest}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{getRequest()}{getRequest()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_request}{Request}} \& Web\+Server\+::get\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves the current request. 
+
+\begin{DoxyReturn}{Returns}
+Reference to the current request. 
+\end{DoxyReturn}
+\Hypertarget{class_web_server_a3c377518f6ab6b1075874a8e980c400f}\label{class_web_server_a3c377518f6ab6b1075874a8e980c400f} 
+\index{WebServer@{WebServer}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{isEmpty()}{isEmpty()}}
+{\footnotesize\ttfamily bool Web\+Server\+::is\+Empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the web server is empty. 
+
+\begin{DoxyReturn}{Returns}
+True if the web server is empty, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_web_server_ad746dd46e47c53b96b0f85351a2f87c8}\label{class_web_server_ad746dd46e47c53b96b0f85351a2f87c8} 
+\index{WebServer@{WebServer}!operator=@{operator=}}
+\index{operator=@{operator=}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_web_server}{Web\+Server}} \& Web\+Server\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_web_server}{Web\+Server}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Copy assignment operator. 
+
+Assigns this instance the values from another instance. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The \doxylink{class_web_server}{Web\+Server} instance to assign from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the current instance after assignment. 
+\end{DoxyReturn}
+\Hypertarget{class_web_server_a12be82559faaab191a09fb5beda2a1f1}\label{class_web_server_a12be82559faaab191a09fb5beda2a1f1} 
+\index{WebServer@{WebServer}!removeRequest@{removeRequest}}
+\index{removeRequest@{removeRequest}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{removeRequest()}{removeRequest()}}
+{\footnotesize\ttfamily void Web\+Server\+::remove\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Removes the current request from the web server. 
+
+Deletes the current request and sets the server to empty. 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1}\label{class_web_server_abbdcd46b3c904e164abeca7528b0e5a1} 
+\index{WebServer@{WebServer}!empty@{empty}}
+\index{empty@{empty}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{empty}{empty}}
+{\footnotesize\ttfamily bool Web\+Server\+::empty\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the server is handling a request. 
+
+\Hypertarget{class_web_server_a076fd03d00964d108f20b061576ea30d}\label{class_web_server_a076fd03d00964d108f20b061576ea30d} 
+\index{WebServer@{WebServer}!request@{request}}
+\index{request@{request}!WebServer@{WebServer}}
+\doxysubsubsection{\texorpdfstring{request}{request}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_request}{Request}}\texorpdfstring{$\ast$}{*} Web\+Server\+::request\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pointer to the current request being handled. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{web__server_8cpp}{web\+\_\+server.\+cpp}}\end{DoxyCompactItemize}
